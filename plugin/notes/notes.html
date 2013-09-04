@@ -111,7 +111,8 @@
 			}
 
 			.elapsed,
-			.clock {
+			.clock,
+			.punctuality {
 				color: #333;
 				font-size: 2em;
 				text-align: center;
@@ -122,7 +123,8 @@
 			}
 
 			.elapsed h2,
-			.clock h2 {
+			.clock h2,
+			.punctuality h2 {
 				font-size: 0.8em;
 				line-height: 100%;
 				margin: 0;
@@ -131,6 +133,10 @@
 
 			.elapsed .mute {
 				color: #ddd;
+			}
+			
+			#punctuality.late {
+				color: red;
 			}
 
 		</style>
@@ -148,13 +154,17 @@
 		</div>
 
 		<div class="time">
-			<div class="clock">
+			<!--<div class="clock">
 				<h2>Time</h2>
 				<span id="clock">0:00:00 AM</span>
-			</div>
+			</div>-->
 			<div class="elapsed">
 				<h2>Elapsed</h2>
 				<span id="hours">00</span><span id="minutes">:00</span><span id="seconds">:00</span>
+			</div>
+			<div class="punctuality">
+				<h2>Pünktlichkeit</h2>
+				<span id="punctuality">+0</span>
 			</div>
 		</div>
 
@@ -162,6 +172,7 @@
 
 		<script src="../../plugin/markdown/marked.js"></script>
 		<script>
+		
 
 			window.addEventListener( 'load', function() {
 
@@ -170,10 +181,14 @@
 					var notes = document.getElementById( 'notes' ),
 						currentSlide = document.getElementById( 'current-slide' ),
 						nextSlide = document.getElementById( 'next-slide' ),
-						silenced = false;
-
+						silenced = false,
+						onTime = true;
+						
 					window.addEventListener( 'message', function( event ) {
 						var data = JSON.parse( event.data );
+						
+						plannedDurationGlobal += data.plannedDuration * 1000;
+						plannedDurationSlide = data.plannedDuration * 1000;
 
 						// No need for updating the notes in case of fragment changes
 						if ( data.notes !== undefined) {
@@ -189,18 +204,25 @@
 
 						// Update the note slides
 						currentSlide.contentWindow.Reveal.slide( data.indexh, data.indexv, data.indexf );
-						nextSlide.contentWindow.Reveal.slide( data.nextindexh, data.nextindexv );
+						nextSlide.contentWindow.Reveal.slide( data.nextindexh, data.nextindexv, undefined, undefined, punctualityDiff );
 
 						silenced = false;
+						
+						console.log(data);
 
 					}, false );
 
 					var start = new Date(),
 						timeEl = document.querySelector( '.time' ),
-						clockEl = document.getElementById( 'clock' ),
+						//clockEl = document.getElementById( 'clock' ),
 						hoursEl = document.getElementById( 'hours' ),
 						minutesEl = document.getElementById( 'minutes' ),
-						secondsEl = document.getElementById( 'seconds' );
+						secondsEl = document.getElementById( 'seconds' ),
+						punctuality = document.getElementById( 'punctuality' );
+						
+					var plannedDurationGlobal = start.getTime(),
+						plannedDurationSlide;
+					var punctualityDiff;
 
 					setInterval( function() {
 
@@ -214,22 +236,52 @@
 						minutes = Math.floor( ( diff / ( 1000 * 60 ) ) % 60 );
 						seconds = Math.floor( ( diff / 1000 ) % 60 );
 
-						clockEl.innerHTML = now.toLocaleTimeString();
+						//clockEl.innerHTML = now.toLocaleTimeString();
 						hoursEl.innerHTML = zeroPadInteger( hours );
 						hoursEl.className = hours > 0 ? "" : "mute";
 						minutesEl.innerHTML = ":" + zeroPadInteger( minutes );
 						minutesEl.className = minutes > 0 ? "" : "mute";
 						secondsEl.innerHTML = ":" + zeroPadInteger( seconds );
+						
+						punctualityDiff = now.getTime() - plannedDurationGlobal;
+						
+						console.log(punctualityDiff, plannedDurationSlide, plannedDurationGlobal);
+						if (punctualityDiff > 10000) {
+							var punctualityDiffMinutes = Math.floor(punctualityDiff / 60000);
+							var punctualityDiffSeconds = Math.abs(punctualityDiff % 60000);
+							
+							var minutes = punctualityDiffSeconds > 45000 ? punctualityDiffMinutes + 1 : punctualityDiffMinutes;
+							var seconds = punctualityDiffSeconds > 15000 && punctualityDiffSeconds <= 45000 ? "&frac12;" : "";
+							
+							punctuality.innerHTML = "+" + Math.abs(minutes) + seconds;
+							punctuality.className = punctualityDiffMinutes > 0 || punctualityDiffSeconds > 10000 ? "late" : "";
+						} else if (plannedDurationSlide + punctualityDiff < -10000) {
+							var punctualityDiffMinutes = Math.ceil((punctualityDiff + plannedDurationSlide) / 60000);
+							var punctualityDiffSeconds = Math.abs((punctualityDiff + plannedDurationSlide) % 60000);
+							
+							var minutes = punctualityDiffSeconds > 45000 ? punctualityDiffMinutes - 1 : punctualityDiffMinutes;
+							var seconds = punctualityDiffSeconds > 15000 && punctualityDiffSeconds <= 45000 ? "&frac12;" : "";
+							
+							punctuality.innerHTML = "-" + Math.abs(minutes) + seconds;
+							punctuality.className = "late";
+						} else if (plannedDurationSlide + punctualityDiff < 0) {
+							punctuality.className = "";
+							punctuality.innerHTML = "-0";
+						} else {
+							onTime;
+							punctuality.className = "";
+							punctuality.innerHTML = "+0";
+						}
 
 					}, 1000 );
 
 					// Broadcasts the state of the notes window to synchronize
 					// the main window
 					function synchronizeMainWindow() {
-
+						debugger;
 						if( !silenced ) {
 							var indices = currentSlide.contentWindow.Reveal.getIndices();
-							window.opener.Reveal.slide( indices.h, indices.v, indices.f );
+							window.opener.Reveal.slide( indices.h, indices.v, indices.f, punctualityDiff );
 						}
 
 					}

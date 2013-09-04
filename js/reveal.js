@@ -109,6 +109,8 @@ var Reveal = (function(){
 		// The previous and current slide HTML elements
 		previousSlide,
 		currentSlide,
+		previousFragment = 0,
+		currentFragment = 0,
 
 		// Slides may hold a data-state attribute which we pick up and apply
 		// as a class to the body. This list contains the combined state of
@@ -1410,9 +1412,9 @@ var Reveal = (function(){
 	 * @param {int} f Optional index of a fragment within the
 	 * target slide to activate
 	 * @param {int} o Optional origin for use in multimaster environments
+	 * @param {int} p Optional punctuality for reducing or adding backup slides automatically
 	 */
-	function slide( h, v, f, o ) {
-
+	function slide( h, v, f, o, p ) {
 		// Remember where we were at before
 		previousSlide = currentSlide;
 
@@ -1439,6 +1441,14 @@ var Reveal = (function(){
 
 		var indexhBefore = indexh || 0,
 			indexvBefore = indexv || 0;
+			
+		
+		// Check whether we need backup slides or whether we have to hurry up and leave the next one.
+		if (!p) {
+			h = getNextRegularSlide(h);
+		} else {
+			h = getNextFittingSlide(h, p);
+		}
 
 		// Activate and transition to the new slide
 		indexh = updateSlides( HORIZONTAL_SLIDES_SELECTOR, h === undefined ? indexh : h );
@@ -1514,6 +1524,19 @@ var Reveal = (function(){
 			// Ensure that the previous slide is never the same as the current
 			previousSlide = null;
 		}
+		
+		
+		// Dispatch event if fragment changed
+		if ( typeof f !== 'undefined' ) {
+			var fragmentChanged = f > currentFragment;
+			if( fragmentChanged ) {
+				currentFragment = f;
+				dispatchEvent( 'fragmentshown', {
+					fragment: fragments[f],
+					fragments: fragments
+				} );
+			}
+		}
 
 		// Solves an edge case where the previous slide maintains the
 		// 'present' class when navigating between adjacent vertical
@@ -1550,6 +1573,32 @@ var Reveal = (function(){
 		// Update the URL hash
 		writeURL();
 
+	}
+	
+	function getNextRegularSlide(h, v, f) {
+		// Query all horizontal slides in the deck
+		var horizontalSlides = document.querySelectorAll( HORIZONTAL_SLIDES_SELECTOR );
+		
+		if (horizontalSlides[h].getAttribute("data-backup") !== "true") {
+			return h;
+		}
+		
+		return getNextRegularSlide(h + 1);
+	}
+	
+	function getNextFittingSlide(h, p) {
+		// Query all horizontal slides in the deck
+		var horizontalSlides = document.querySelectorAll( HORIZONTAL_SLIDES_SELECTOR );
+		
+		if (horizontalSlides[h].getAttribute("data-backup") !== "true") {
+			return h;
+		}
+		
+		if (parseInt(horizontalSlides[h].getAttribute("data-plannedDuration"), 10) * 1000 <= -p) {
+			return h;
+		}
+		
+		return getNextFittingSlide(h + 1, p);
 	}
 
 	/**
@@ -2099,13 +2148,17 @@ var Reveal = (function(){
 	 * false otherwise
 	 */
 	function nextFragment() {
-
+	
 		if( currentSlide && config.fragments ) {
 			var fragments = sortFragments( currentSlide.querySelectorAll( '.fragment:not(.visible)' ) );
 
 			if( fragments.length ) {
 				// Find the index of the next fragment
 				var index = fragments[0].getAttribute( 'data-fragment-index' );
+				
+				// save Fragments
+				previousFragment = currentFragment;
+				currentFragment = index;
 
 				// Find all fragments with the same index
 				fragments = currentSlide.querySelectorAll( '.fragment[data-fragment-index="'+ index +'"]' );
@@ -2140,6 +2193,10 @@ var Reveal = (function(){
 			if( fragments.length ) {
 				// Find the index of the previous fragment
 				var index = fragments[ fragments.length - 1 ].getAttribute( 'data-fragment-index' );
+				
+				// save Fragments
+				previousFragment = currentFragment;
+				currentFragment = index;
 
 				// Find all fragments with the same index
 				fragments = currentSlide.querySelectorAll( '.fragment[data-fragment-index="'+ index +'"]' );

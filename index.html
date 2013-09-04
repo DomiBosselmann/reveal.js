@@ -36,7 +36,7 @@
 
 			<!-- Any section element inside of this container is displayed as a slide -->
 			<div class="slides">
-				<section>
+				<section data-plannedDuration="30">
 					<h1>Reveal.js</h1>
 					<h3>HTML Presentations Made Easy</h3>
 					<p>
@@ -44,7 +44,7 @@
 					</p>
 				</section>
 
-				<section>
+				<section data-plannedDuration="40">
 					<h2>Heads Up</h2>
 					<p>
 						reveal.js is a framework for easily creating beautiful presentations using HTML. You'll need a browser with
@@ -57,8 +57,8 @@
 				</section>
 
 				<!-- Example of nested vertical slides -->
-				<section>
-					<section>
+				<section data-plannedDuration="50">
+					<section data-plannedDuration="10">
 						<h2>Vertical Slides</h2>
 						<p>
 							Slides can be nested inside of other slides,
@@ -68,7 +68,7 @@
 							<img width="178" height="238" src="https://s3.amazonaws.com/hakim-static/reveal-js/arrow.png" alt="Down arrow">
 						</a>
 					</section>
-					<section>
+					<section data-plannedDuration="20">
 						<h2>Basement Level 1</h2>
 						<p>Press down or up to navigate.</p>
 					</section>
@@ -79,7 +79,7 @@
 							<img width="280" height="326" src="https://s3.amazonaws.com/hakim-static/reveal-js/cornify.gif" alt="Unicorn">
 						</a>
 					</section>
-					<section>
+					<section data-plannedDuration="30">
 						<h2>Basement Level 3</h2>
 						<p>That's it, time to go back up.</p>
 						<a href="#/2" class="image">
@@ -88,14 +88,14 @@
 					</section>
 				</section>
 
-				<section>
+				<section data-plannedDuration="10">
 					<h2>Slides</h2>
 					<p>
 						Not a coder? No problem. There's a fully-featured visual editor for authoring these, try it out at <a href="http://slid.es" target="_blank">http://slid.es</a>.
 					</p>
 				</section>
 
-				<section>
+				<section data-plannedDuration="10">
 					<h2>Point of View</h2>
 					<p>
 						Press <strong>ESC</strong> to enter the slide overview.
@@ -105,14 +105,14 @@
 					</p>
 				</section>
 
-				<section>
+				<section data-plannedDuration="10">
 					<h2>Works in Mobile Safari</h2>
 					<p>
 						Try it out! You can swipe through the slides and pinch your way to the overview.
 					</p>
 				</section>
 
-				<section>
+				<section data-plannedDuration="10">
 					<h2>Marvelous Unordered List</h2>
 					<ul>
 						<li>No order here</li>
@@ -122,7 +122,7 @@
 					</ul>
 				</section>
 
-				<section>
+				<section data-plannedDuration="10">
 					<h2>Fantastic Ordered List</h2>
 					<ol>
 						<li>One is smaller than...</li>
@@ -131,14 +131,14 @@
 					</ol>
 				</section>
 
-				<section data-markdown>
+				<section data-markdown data-plannedDuration="10">
 					<script type="text/template">
 						## Markdown support
 
 						For those of you who like that sort of thing. Instructions and a bit more info available [here](https://github.com/hakimel/reveal.js#markdown).
 
 						```
-						<section data-markdown>
+						<section data-markdown data-plannedDuration="10">
 						  ## Markdown support
 
 						  For those of you who like that sort of thing.
@@ -148,7 +148,7 @@
 					</script>
 				</section>
 
-				<section id="transitions">
+				<section id="transitions" data-plannedDuration="10">
 					<h2>Transition Styles</h2>
 					<p>
 						You can select from different transitions, like: <br>
@@ -163,7 +163,7 @@
 					</p>
 				</section>
 
-				<section id="themes">
+				<section id="themes" data-plannedDuration="10">
 					<h2>Themes</h2>
 					<p>
 						Reveal.js comes with a few themes built in: <br>
@@ -181,7 +181,7 @@
 					</p>
 				</section>
 
-				<section>
+				<section data-plannedDuration="10">
 					<h2>Global State</h2>
 					<p>
 						Set <code>data-state="something"</code> on a slide and <code>"something"</code>
@@ -190,7 +190,7 @@
 					</p>
 				</section>
 
-				<section data-state="customevent">
+				<section data-state="customevent" data-plannedDuration="10">
 					<h2>Custom Events</h2>
 					<p>
 						Additionally custom events can be triggered on a per slide basis by binding to the <code>data-state</code> name.
@@ -203,7 +203,7 @@ Reveal.addEventListener( 'customevent', function() {
 				</section>
 
 				<section>
-					<section data-background="#007777">
+					<section data-background="#007777" data-plannedDuration="10">
 						<h2>Slide Backgrounds</h2>
 						<p>
 							Set <code>data-background="#007777"</code> on a slide to change the full page background to the given color. All CSS color formats are supported.
@@ -212,31 +212,31 @@ Reveal.addEventListener( 'customevent', function() {
 							<img width="178" height="238" src="https://s3.amazonaws.com/hakim-static/reveal-js/arrow.png" alt="Down arrow">
 						</a>
 					</section>
-					<section data-background="https://s3.amazonaws.com/hakim-static/reveal-js/arrow.png">
+					<section data-background="https://s3.amazonaws.com/hakim-static/reveal-js/arrow.png" data-plannedDuration="10">
 						<h2>Image Backgrounds</h2>
 						<pre><code>&lt;section data-background="image.png"&gt;</code></pre>
 					</section>
-					<section data-background="https://s3.amazonaws.com/hakim-static/reveal-js/arrow.png" data-background-repeat="repeat" data-background-size="100px">
+					<section data-background="https://s3.amazonaws.com/hakim-static/reveal-js/arrow.png" data-background-repeat="repeat" data-background-size="100px" data-plannedDuration="10">
 						<h2>Repeated Image Backgrounds</h2>
 						<pre><code style="word-wrap: break-word;">&lt;section data-background="image.png" data-background-repeat="repeat" data-background-size="100px"&gt;</code></pre>
 					</section>
 				</section>
 
-				<section data-transition="linear" data-background="#4d7e65" data-background-transition="slide">
+				<section data-transition="linear" data-background="#4d7e65" data-background-transition="slide" data-plannedDuration="10">
 					<h2>Background Transitions</h2>
 					<p>
 						Pass reveal.js the <code>backgroundTransition: 'slide'</code> config argument to make backgrounds slide rather than fade.
 					</p>
 				</section>
 
-				<section data-transition="linear" data-background="#8c4738" data-background-transition="slide">
+				<section data-transition="linear" data-background="#8c4738" data-background-transition="slide" data-plannedDuration="10">
 					<h2>Background Transition Override</h2>
 					<p>
 						You can override background transitions per slide by using <code>data-background-transition="slide"</code>.
 					</p>
 				</section>
 
-				<section>
+				<section data-plannedDuration="10">
 					<h2>Clever Quotes</h2>
 					<p>
 						These guys come in two forms, inline: <q cite="http://searchservervirtualization.techtarget.com/definition/Our-Favorite-Technology-Quotations">
@@ -248,7 +248,7 @@ Reveal.addEventListener( 'customevent', function() {
 					</blockquote>
 				</section>
 
-				<section>
+				<section data-plannedDuration="10">
 					<h2>Pretty Code</h2>
 					<pre><code data-trim contenteditable>
 function linkify( selector ) {
@@ -269,7 +269,7 @@ function linkify( selector ) {
 					<p>Courtesy of <a href="http://softwaremaniacs.org/soft/highlight/en/description/">highlight.js</a>.</p>
 				</section>
 
-				<section>
+				<section data-plannedDuration="10">
 					<h2>Intergalactic Interconnections</h2>
 					<p>
 						You can link between slides internally,
@@ -277,15 +277,15 @@ function linkify( selector ) {
 					</p>
 				</section>
 
-				<section>
-					<section>
+				<section data-plannedDuration="100">
+					<section data-plannedDuration="80">
 						<h2>Fragmented Views</h2>
 						<p>Hit the next arrow...</p>
-						<p class="fragment">... to step through ...</p>
+						<p class="fragment" data-plannedDuration="20">... to step through ...</p>
 						<ol>
-							<li class="fragment"><code>any type</code></li>
-							<li class="fragment"><em>of view</em></li>
-							<li class="fragment"><strong>fragments</strong></li>
+							<li class="fragment" data-plannedDuration="20"><code>any type</code></li>
+							<li class="fragment" data-plannedDuration="20"><em>of view</em></li>
+							<li class="fragment" data-plannedDuration="20"><strong>fragments</strong></li>
 						</ol>
 
 						<aside class="notes">
@@ -348,7 +348,7 @@ function linkify( selector ) {
 		</div>
 
 		<script src="lib/js/head.min.js"></script>
-		<script src="js/reveal.min.js"></script>
+		<script src="js/reveal.js"></script>
 
 		<script>
 

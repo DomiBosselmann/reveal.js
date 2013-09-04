@@ -21,7 +21,7 @@ var RevealNotes = (function() {
 		/**
 		 * Posts the current slide data to the notes window
 		 */
-		function post() {
+		function post(event) {
 			var slideElement = Reveal.getCurrentSlide(),
 				slideIndices = Reveal.getIndices(),
 				messageData;
@@ -45,7 +45,8 @@ var RevealNotes = (function() {
 				indexf : slideIndices.f,
 				nextindexh : nextindexh,
 				nextindexv : nextindexv,
-				markdown : notes ? typeof notes.getAttribute( 'data-markdown' ) === 'string' : false
+				markdown : notes ? typeof notes.getAttribute( 'data-markdown' ) === 'string' : false,
+				plannedDuration : parseInt( event && event.fragment ? event.fragment.getAttribute( 'data-plannedDuration' ) : slideElement.getAttribute( 'data-plannedDuration' ), 10 )
 			};
 
 			notesPopup.postMessage( JSON.stringify( messageData ), '*' );
